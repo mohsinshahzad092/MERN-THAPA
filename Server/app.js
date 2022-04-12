@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 
 const express = require('express');
 const User = require('./userSchema');
+const { application } = require('express');
 const app = express()
 
 dotenv.config({path:"./config.env"})
@@ -24,6 +25,10 @@ app.use(express.json())
 app.get('/', (req, res) => {
 
     res.send("Hellow World")
+})
+
+app.get('/profile', (req, res)=> {
+    res.send("teri profile")
 })
 
 
