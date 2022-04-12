@@ -31,6 +31,10 @@ app.get('/profile', (req, res)=> {
     res.send("teri profile")
 })
 
+app.get('/contact', (req, res)=> {
+    res.send("mera contact")
+})
+
 
 
 app.get('/login', (req, res) => {
