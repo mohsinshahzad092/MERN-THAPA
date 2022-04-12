@@ -27,9 +27,6 @@ app.get('/', (req, res) => {
     res.send("Hellow World")
 })
 
-app.get('/profile', (req, res)=> {
-    res.send("teri profile")
-})
 
 app.get('/contact', (req, res)=> {
     res.send("mera contact")
