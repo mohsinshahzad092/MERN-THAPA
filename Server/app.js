@@ -2,25 +2,20 @@ const dotenv = require('dotenv')
 const mongoose = require('mongoose')
 
 const express = require('express');
-const User = require('./userSchema');
+const User = require('./model/userSchema');
 const { application } = require('express');
 const app = express()
 
-dotenv.config({path:"./config.env"})
+dotenv.config({ path: "./config.env" })
+require('./db/conn');
 
-const Port = 3000;
 
-const DB = "mongodb+srv://mernthapa:mernthapa@cluster0.oqrjj.mongodb.net/mernstack?retryWrites=true&w=majority"
 
-mongoose.connect(DB).then(() => {
-    console.log("connection done")
 
-}).catch((err) => {
-    console.log("connection not done")
-    console.log(err)
-})
+const PORT = process.env.PORT;
 
 app.use(express.json())
+
 
 app.get('/', (req, res) => {
 
@@ -28,7 +23,7 @@ app.get('/', (req, res) => {
 })
 
 
-app.get('/contact', (req, res)=> {
+app.get('/contact', (req, res) => {
     res.send("mera contact")
 })
 
@@ -47,9 +42,10 @@ app.get('/signup', (req, res) => {
 
 
 app.post('/signup', async (req, res) => {
+    console.log(req.body)
     const { name, email, phone, password, cpassword, cnic } = req.body
 
-    if(!name || !email || !password || !cpassword || !cnic) {
+    if (!name || !email || !password || !cpassword || !cnic) {
         return res.send("Your data is incomplete")
     }
 
@@ -69,9 +65,31 @@ app.post('/signup', async (req, res) => {
     } catch (error) {
         console.log(error)
     }
+})
 
+app.post('/login', async (req, res) => {
+    console.log(req.body)
+    const { email, password } = req.body
+    if (!email || !password) {
+        return res.send("Your field is missing")
+    }
 
+    try {
+        const userExist = await User.findOne({
+            email: email
+        })
+        console.log(userExist)
+        console.log(userExist?.password)
 
+        if(userExist?.password == password) {
+            return res.send("User logged In")
+        } else {
+            return res.send("Password not correct")
+
+        }
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 
@@ -82,9 +100,6 @@ app.post('/signup', async (req, res) => {
 
 
 
-
-
-
-app.listen(Port, () => {
-    console.log(`server is running port ${Port}`)
+app.listen(PORT, () => {
+    console.log(`server is running port ${PORT}`)
 })
